@@ -35,9 +35,19 @@ module grid2(x=3,y=3,d=25, tolerance=0.5, h=5) {
 }
 
 
-
-grid(x=3,y=3, tolerance=0.25);
-difference() {
-    translate([28,24,2])cylinder(d=50,h=30) ;
-     grid2(x=3,y=3, tolerance=0.25, h=50);
+module stack_grid(x=3,y=3, d=25, tolerance=0.5,wh=5, h=30, stack=false) {
+    shift_y = ((y%2 == 1) ? (d+60)   : 1);
+    grid(x=x,y=y, tolerance=tolerance);
+    if (stack)
+        difference() {
+        translate([-(d+6)/2,(d-9)/2,0])
+            union() {
+            for (j = [0:1:y-3]) 
+                for (i = [1:x-1]) 
+                    translate([i*(d+4),(d*1.85)*j,2])cylinder(d=10,h=30) ;
+            }
+            grid2(x=x,y=y, tolerance=tolerance, h=h+10);
+        }
 }
+
+stack_grid(x=3, y=4, d=25, tolerance=0.25, stack=true);
